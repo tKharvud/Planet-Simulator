@@ -502,10 +502,10 @@ function MapConstants:InitializeTemperature()
 	if temp == 1 then						--Cold
 		print("Setting cold world constants - Planet Simulator")
 		self.desertMinTemperature = 0.40
-		self.tundraTemperature = 0.37
+		self.tundraTemperature = 0.38
 		self.snowTemperature = 0.29
 
-		self.treesMinTemperature = 0.30
+		self.treesMinTemperature = 0.50
 		self.jungleMinTemperature = 0.71
 
 		self.atollNorthLatitudeLimit = 42
@@ -548,10 +548,10 @@ function MapConstants:InitializeRainfall()
 	end
 	if rain == 1 then					--Arid
 		print("Setting arid world constants - Planet Simulator")
-		self.desertPercent = 0.41
-		self.plainsPercent = 0.66
-		self.zeroTreesPercent = 0.65
-		self.junglePercent = 0.77
+		self.desertPercent = 0.41		--vb1: 0.41
+		self.plainsPercent = 0.66		--vb1: 0.66
+		self.zeroTreesPercent = 0.65	--vb1: 0.65
+		self.junglePercent = 0.77		--vb1: 0.77
 
 		self.riverPercent = 0.16
 		self.riverRainCheatFactor = 1
@@ -559,10 +559,10 @@ function MapConstants:InitializeRainfall()
 		self.marshElevation = 0.05
 	elseif rain == 3 then				--Wet
 		print("Setting wet world constants - Planet Simulator")
-		self.desertPercent = 0.25		--prev: 0.
-		self.plainsPercent = 0.50		--prev: 0.
-		self.zeroTreesPercent = 0.49	--prev: 0.
-		self.junglePercent = 0.55		--prev: 0.
+		self.desertPercent = 0.25		--vb1: 0.25
+		self.plainsPercent = 0.50		--vb1: 0.50
+		self.zeroTreesPercent = 0.49	--vb1: 0.49
+		self.junglePercent = 0.55		--vb1: 0.55
 
 		self.riverPercent = 0.25
 		self.riverRainCheatFactor = 1.5
@@ -570,10 +570,10 @@ function MapConstants:InitializeRainfall()
 		self.marshElevation = 0.10
 	else								--Standard
 		print("Setting normal rainfall constants - Planet Simulator")	
-		self.desertPercent = 0.33		--Percent of land that is below the desert rainfall threshold.			vb1: 0.33
-		self.plainsPercent = 0.55	--Percent of land that is below the plains rainfall threshold.				vb1: 0.55
+		self.desertPercent = 0.37		--Percent of land that is below the desert rainfall threshold.			vb1: 0.33
+		self.plainsPercent = 0.56	--Percent of land that is below the plains rainfall threshold.				vb1: 0.55
 		self.zeroTreesPercent = 0.54 	--Percent of land that is below the rainfall threshold where no trees can appear.	vb1: 0.54
-		self.junglePercent = 0.64 		--Percent of land below the jungle rainfall threshold.				vb1: 0.66
+		self.junglePercent = 0.67 		--Percent of land below the jungle rainfall threshold.				vb1: 0.66
 
 		self.riverPercent = 0.18 		--percent of river junctions that are large enough to become rivers.
 		self.riverRainCheatFactor = 1.2 --This value is multiplied by each river step. Values greater than one favor watershed size. Values less than one favor actual rain amount.
