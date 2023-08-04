@@ -1,7 +1,7 @@
 # Planet-Simulator
 My personal version of Bobert13's Planet Simulator for Sid Meier's Civilization V. Specifically based on LamilLerran's LL3 version, and a lot of the climate-generation code being originally from Cephalo's PerfectWorld3 Mapscript. Not too polished yet, but it works just fine if you like what I like. 
 
-**Changelog**
+**Main Features**
   - Desert tiles bordering forest or jungle are turned into plains.
   - Jungle tiles surrounded by enough mountains get grassland under them. This is to simulate subtropical highlands. 
   - Mountains are assigned continent art-types based on elevation. No visual problems were found in testing on my end.
