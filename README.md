@@ -8,11 +8,11 @@ Changelog:
   - A lot more plains should spawn under forest, especially for the Standard and Arid settings.
 
 **Rainfall Settings**
-  Arid: Small band of jungle, large and reliable band of desert
-  Standard: Modest band of jungle, still large band of desert but with intrusions of plains and jungle poleward more common
-  Wet: Reliably generates intrusions of plains into desert regions, especially along coasts.     
+  - Arid: Small band of jungle, large and reliable band of desert
+  - Standard: Modest band of jungle, still large band of desert but with intrusions of plains and jungle poleward more common
+  - Wet: Reliably generates intrusions of plains into desert regions, especially along coasts.     
 
 **Temperature Settings**
-Cool: Tundra and grassland in temperate latitudes with scattered forests toward the equator. equatorward retreat of deserts.
-Standard: Should be roughly earth-like in biome distributions. Modest amount of tundra/snow.
-Hot: Expansion of deserts poleward, temperate forests go almost to the edges of the map. Small amount of tundra/snow
+- Cool: Tundra and grassland in temperate latitudes with scattered forests toward the equator. equatorward retreat of deserts.
+- Standard: Should be roughly earth-like in biome distributions. Modest amount of tundra/snow.
+- Hot: Expansion of deserts poleward, temperate forests go almost to the edges of the map. Small amount of tundra/snow
