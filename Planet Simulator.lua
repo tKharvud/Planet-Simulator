@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 --Planet Simulator by Bobert13
 --Based on: PerfectWorld3.lua map script (c)2010 Rich Marinaccio
---version LL3
+--version LL3b1
 --------------------------------------------------------------------------------
 --This map script uses simulated plate tectonics to create landforms, and generates
 --climate based on a simplified model of geostrophic and monsoon wind patterns.
@@ -9,6 +9,10 @@
 --used to create the landforms.
 --
 --Version History
+--LL3b1	- Some extra scripts added to the cleanup function
+--		- Mountain art-style is based on elevation.
+--		- Rainfall variables tweaked for more plains to spawn under forest.
+--
 --LL3	- Bugfix: Sea levels no longer always generate as "Low" regardless of option chosen
 --		- Bugfix: Rivers ending in inland seas no longer sometimes end before reaching the sea
 --		- Bugfix: Terra-style start placement available (as "All Civs on Largest Continent")
@@ -119,7 +123,7 @@ function MapConstants:New()
 	--(Deprecated)mconst.marshPercent = 0.92 	--Percent of land below the jungle marsh rainfall threshold.
 	--(Moved)mconst.marshElevation = 0.07 	--Now in InitializeRainfall()
 
-	mconst.OasisThreshold = 7 		--Maximum food around a tile for it to be considered for an Oasis -Bobert13
+	mconst.OasisThreshold = 2 		--Maximum food around a tile for it to be considered for an Oasis -Bobert13
 
 	--(Moved)mconst.atollNorthLatitudeLimit = 47 --Now in InitializeTemperature()
 	--(Moved)mconst.atollSouthLatitudeLimit = -47 --Now in InitializeTemperature()
@@ -478,7 +482,7 @@ function MapConstants:InitializeWorldAge()
 	if age == 1 then		--Young
 		print("Setting young world constants - Planet Simulator")
 		self.hillsPercent = 0.59
-		self.mountainsPercent = 0.87
+		self.mountainsPercent = 0.89
 	elseif age == 3 then	--Old
 		print("Setting old world constants - Planet Simulator")
 		self.hillsPercent = 0.70
@@ -525,9 +529,9 @@ function MapConstants:InitializeTemperature()
 		print("Setting temperate world constants - Planet Simulator")
 		self.desertMinTemperature = 0.35	--Coldest absolute temperature allowed to be desert, plains if colder.
 		self.tundraTemperature = 0.31		--Absolute temperature below which is tundra.
-		self.snowTemperature = 0.26 		--Absolute temperature below which is snow.
+		self.snowTemperature = 0.24 		--Absolute temperature below which is snow.
 
-		self.treesMinTemperature = 0.27		--Coldest absolute temperature where trees appear.
+		self.treesMinTemperature = 0.28		--Coldest absolute temperature where trees appear.
 		self.jungleMinTemperature = 0.66	--Coldest absolute temperature allowed to be jungle, forest if colder.
 
 		self.atollNorthLatitudeLimit = 47	--Northern Atoll latitude limit.
@@ -550,7 +554,7 @@ function MapConstants:InitializeRainfall()
 		self.junglePercent = 0.77
 
 		self.riverPercent = 0.16
-		self.riverRainCheatFactor = 1.7
+		self.riverRainCheatFactor = 1
 		self.minRiverSize = 32
 		self.marshElevation = 0.05
 	elseif rain == 3 then				--Wet
@@ -561,18 +565,18 @@ function MapConstants:InitializeRainfall()
 		self.junglePercent = 0.55		--prev: 0.
 
 		self.riverPercent = 0.25
-		self.riverRainCheatFactor = 1.4
+		self.riverRainCheatFactor = 1.5
 		self.minRiverSize = 16
 		self.marshElevation = 0.10
 	else								--Standard
 		print("Setting normal rainfall constants - Planet Simulator")	
 		self.desertPercent = 0.33		--Percent of land that is below the desert rainfall threshold.			vb1: 0.33
-		self.plainsPercent = 0.54	--Percent of land that is below the plains rainfall threshold.				vb1: 0.55
-		self.zeroTreesPercent = 0.52 	--Percent of land that is below the rainfall threshold where no trees can appear.	vb1: 0.54
-		self.junglePercent = 0.66 		--Percent of land below the jungle rainfall threshold.				vb1: 0.66
+		self.plainsPercent = 0.55	--Percent of land that is below the plains rainfall threshold.				vb1: 0.55
+		self.zeroTreesPercent = 0.54 	--Percent of land that is below the rainfall threshold where no trees can appear.	vb1: 0.54
+		self.junglePercent = 0.64 		--Percent of land below the jungle rainfall threshold.				vb1: 0.66
 
 		self.riverPercent = 0.18 		--percent of river junctions that are large enough to become rivers.
-		self.riverRainCheatFactor = 1.6 --This value is multiplied by each river step. Values greater than one favor watershed size. Values less than one favor actual rain amount.
+		self.riverRainCheatFactor = 1.2 --This value is multiplied by each river step. Values greater than one favor watershed size. Values less than one favor actual rain amount.
 		self.minRiverSize = 24			--Helps to prevent a lot of really short rivers. Recommended values are 15 to 40. -Bobert13
 		self.marshElevation = 0.07 		--Percent of land below the lowlands marsh threshold.
 	end
@@ -681,9 +685,9 @@ function MapConstants:InitializeIslands()
 		self.landPercentCheat = self.landPercentCheat - 0.02
 	else					--Arcs of Small Islands
 		print("Setting arcs of small islands constants - Planet Simulator")
-		self.hotspotFrequency = 0.02			--What proportion of tiles are hotspots
+		self.hotspotFrequency = 0.03			--What proportion of tiles are hotspots
 		self.oceanicVolcanoFrequency = 0.20	--What proportion of tiles on an oceanic faultline or hotspot get an elevation boost?
-		self.islandExpansionFactor = 0			--This tiles adjacent to a "volcano" (as selected above) also get an elevation
+		self.islandExpansionFactor = 0.01			--This tiles adjacent to a "volcano" (as selected above) also get an elevation
 											--boost equal to this factor times the elevation boost of the main "volcano"
 											--When 0, tiles adjacent to a "volcano" are unaffected by it.
 	end
@@ -4015,7 +4019,7 @@ function GenerateElevations(W,H,xWrap,yWrap)
 			for dir,_ in pairs(mc.DIRECTIONS) do
 				local xx,yy,valid
 				xx,yy,valid = PlateMap:GetNeighbor(x,y,dir,true)
-				if valid and (dir == mc.C or PWRandInt(1,3) == 1) then
+				if valid and (dir == mc.C) then
 					newUpliftAmount = UpliftAtFault(x,y,mc.FALLBACKFAULT)
 					currentUplifted = currentUplifted + newUpliftAmount/3	--These mountains are not as well placed as standard mountains, so count for less
 				end
@@ -4615,7 +4619,7 @@ function PlacePossibleOasis()
 				end
 			end
 		end
-		if desertCount < 4 then
+		if desertCount < 5 then
 			canPlace = false
 		end
 		if canPlace then
@@ -4650,8 +4654,8 @@ function PlacePossibleOasis()
 					end
 				end
 				if oasisCount == 1 then
-					local roll = PWRandInt(0,1)
-					if roll == 1 then
+					local roll = PWRandInt(0,3)
+					if roll ~= 1 then
 						doplace = false
 					end
 				elseif oasisCount > 1 then
@@ -4920,7 +4924,7 @@ function GeneratePlotTypes()
 	--first do all the preliminary calculations in this function
 	--print(string.format("Map size: width=%d, height=%d - Planet Simulator",W,H))
 	mc = MapConstants:New()
-	-- PWRandSeed(373137609)
+	--PWRandSeed(373137609)
     PWRandSeed()
 
 	elevationMap = GenerateElevationMap(W,H,true,false)
@@ -4980,12 +4984,13 @@ function GeneratePlotTypes()
 				end
 			end
 		end
-		if landCount == 0 then
+		if landCount <= 4 then
 			local roll1 = PWRandInt(1,4)
-			if roll1 == 1 then
-				plot:SetPlotType(PlotTypes.PLOT_LAND,false,true)
-			else
+			if roll1 ~= 1 then
 				plot:SetPlotType(PlotTypes.PLOT_HILLS,false,true)
+				table.insert(landTab, i)
+				--table.remove(mountainTab, k)
+				--k = k-1
 			end
 		end
 	end
@@ -5353,6 +5358,55 @@ function Cleanup()
 		end
 		k=k+1
 	end
+	-- cleans up alpine tundra tiles where they look out of place
+	k = 1
+	for n=1,#tundraTab do
+		local i = tundraTab[k]
+		local plot = Map.GetPlotByIndex(i)
+		local tiles = GetCircle(i,1)
+		local plainsCount = 0
+		local grassCount = 0
+		local forestCount = 0
+		local mountainCount = 0
+		local desertCount = 0
+		for n=1,#tiles do
+			local ii = tiles[n]
+			local nPlot = Map.GetPlotByIndex(ii)
+			
+			if nPlot:GetPlotType() == PlotTypes.PLOT_MOUNTAIN then
+				mountainCount = mountainCount + 1
+			elseif nPlot:GetFeatureType() == featureForest then
+				forestCount = forestCount + 1
+			end
+			if nPlot:GetTerrainType() == terrainPlains then
+				plainsCount = plainsCount + 1
+			elseif nPlot:GetTerrainType() == terrainGrass then
+				grassCount = grassCount + 1
+			elseif nPlot:GetTerrainType() == terrainDesert then
+				desertCount = desertCount + 1
+			end
+		end
+        if i == 365 then
+            local x = i%W
+            local y = (i-x)/W
+            --print(string.format("desertCount for plot (%d, %d) is %d", y, x, desertCount))
+        end
+		if plot:GetPlotType() == PlotTypes.PLOT_HILLS and mountainCount < 4 then
+			if desertCount > 0 then
+				plot:SetTerrainType(terrainPlains,true,true)
+			elseif plainsCount > 2 and forestCount == 0 then
+				plot:SetTerrainType(terrainPlains,true,true)
+				table.insert(plainsTab,i)
+			elseif forestCount > 0 and grassCount > 3 then
+				plot:SetTerrainType(terrainGrass,true,true)
+				table.insert(grassTab,i)
+			end
+			table.remove(tundraTab, k)
+			k = k-1
+		end
+			
+		k=k+1
+	end
 	--Gets rid of strips of plains in the middle of deserts. -Bobert 13
 	k = 1
 	for n=1,#plainsTab do
@@ -5513,11 +5567,18 @@ function Cleanup()
 									end
 								end
 								if coastCounts == 0 and mountainCounts > 2 then
-									plot:SetTerrainType(terrainGrass,true,true)
-									--table.insert(grassTab,i) -- Any point putting it in the grasstab? -Batrach
-									if mountainCounts > 4 then
+									if desertCounts == 0 then
+										plot:SetTerrainType(terrainGrass,true,true)
+										table.insert(grassTab,i) -- Any point putting it in the grasstab? -Batrach
+									else
+										plot:SetTerrainType(terrainPlains,true,true)
+									end
+									plot:SetPlotType(PlotTypes.PLOT_HILLS, false, true)
+									
+									if mountainCounts > 4 and desertCounts < 1 then
 										plot:SetFeatureType(featureForest,-1)
 									end
+							
 								end
 							end
 						end
@@ -5650,6 +5711,7 @@ function AddFeatures()
 		end
 	end
 	Cleanup()
+	--Cleanup()
 	Map.RecalculateAreas()
 	PlacePossibleOasis()
 end
@@ -6509,21 +6571,15 @@ function DetermineContinents()
 				plot:SetContinentArtType(1)
 			elseif temperatureMap.data[i] < mc.desertMinTemperature and plot:IsMountain() then
 				plot:SetContinentArtType(3)
+				plot:SetTerrainType(terrainPlains,true,true)
 			elseif plot:IsMountain() then
 				plot:SetContinentArtType(2)
+				plot:SetTerrainType(terrainPlains,true,true)
 			end
 
 			-- Tempers Coastal Mountains
 			if plot:IsCoastalLand() and plot:IsMountain() and temperatureMap.data[i] > mc.snowTemperature then
-		
 				plot:SetContinentArtType(2)
-				
-				--local rollv = PWRandInt(1,8)
-				--if rollv > 2 then
-					--plot:SetPlotType(PlotTypes.PLOT_HILLS,false,true)
-					--plot:SetTerrainType(terrainPlains, true, true)
-				--end
-				
 			end
 
 		end
