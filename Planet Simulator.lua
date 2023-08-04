@@ -5349,7 +5349,7 @@ function Cleanup()
 				k=k-1
 			end
 		end
-		-- Final check to change to plains if touching any desert at all -Batrach
+		-- Final check to change to plains if touching any desert at all -tKharvud
 		if desertCount > 0 and plot:GetTerrainType() ~= terrainDesert then
 			plot:SetTerrainType(terrainPlains,true,true)
 			table.insert(plainsTab,i)
@@ -5453,7 +5453,7 @@ function Cleanup()
 		for n=1,#tiles do
 			local ii = tiles[n]
 			local nPlot = Map.GetPlotByIndex(ii)
-			--Adds buffer between desert and forest -Batrach
+			--Adds buffer between desert and forest -tKharvud
 			if nPlot:GetFeatureType() == featureForest then
 				forestCount = forestCount + 1
 			end
@@ -5534,7 +5534,7 @@ function Cleanup()
         local i = landTab[k]
 		local plot = Map.GetPlotByIndex(i)
 		if not plot:IsMountain() then
-						--Adds a healthy buffer of plains between jungles and deserts, and helps remove stray jungle tiles/bands -Batrach
+						--Adds a healthy buffer of plains between jungles and deserts, and helps remove stray jungle tiles/bands -tKharvud
 						if temperatureMap.data[i] > mc.jungleMinTemperature and plot:GetTerrainType() ~= terrainDesert then
 							local tiless = GetSpiral(i,2)
 							local desertCounts = 0
@@ -5569,7 +5569,7 @@ function Cleanup()
 								if coastCounts == 0 and mountainCounts > 2 then
 									if desertCounts == 0 then
 										plot:SetTerrainType(terrainGrass,true,true)
-										table.insert(grassTab,i) -- Any point putting it in the grasstab? -Batrach
+										table.insert(grassTab,i) -- Any point putting it in the grasstab? -tKharvud
 									else
 										plot:SetTerrainType(terrainPlains,true,true)
 									end
@@ -5638,7 +5638,7 @@ function AddFeatures()
 				--end
 			--end
 		--end
-		-- Rewrite of the above commented out section? Idk -Batrach
+		-- Rewrite of the above commented out section? Idk -tKharvud
 		if rainfallMap.data[i] < jungleThreshold then
 			if not plot:IsMountain() then
                 -- local treeRange = jungleThreshold - zeroTreesThreshold
@@ -6558,7 +6558,7 @@ function DetermineContinents()
 		-- end
 	-- end
 	Map.DefaultContinentStamper();
-	-- Makes the mountains pretty -Batrach
+	-- Makes the mountains pretty -tKharvud
 	for y=0,elevationMap.height - 1,1 do
 		for x=0,elevationMap.width - 1,1 do
 			local plot = Map.GetPlot(x,y)
